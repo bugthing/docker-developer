@@ -1,5 +1,5 @@
 FROM base/devel
-RUN pacman -Sy --noconfirm wget curl vim libyaml openssh
+RUN pacman -Sy --noconfirm wget curl vim libyaml openssh ctags git subversion s3cmd
 RUN cd / && \
     wget -O ruby-install-0.4.3.tar.gz https://github.com/postmodern/ruby-install/archive/v0.4.3.tar.gz && \
     tar -xzvf ruby-install-0.4.3.tar.gz && \
@@ -16,6 +16,5 @@ RUN cd / && mkdir /opt/nodejs && \
 ENV PATH /opt/rubies/ruby-2.0.0-p481/bin:/opt/nodejs/bin:$PATH
 ENV HOME /root
 RUN gem install dotty && dotty add dotty https://github.com/bugthing/dotty.git && dotty bootstrap dotty
-RUN pacman -Sy --noconfirm ctags git subversion s3cmd
 RUN mkdir ~/temp && chmod 777 ~/temp
 RUN vim -es <<<BundleInstall
