@@ -18,3 +18,4 @@ ENV HOME /root
 RUN gem install dotty && dotty add dotty https://github.com/bugthing/dotty.git && dotty bootstrap dotty
 RUN pacman -Sy --noconfirm ctags git subversion s3cmd
 RUN mkdir ~/temp && chmod 777 ~/temp
+RUN vim -es <<<BundleInstall
