@@ -2,7 +2,7 @@
 FROM base/devel
 
 RUN \
-    echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8' > /etc/locale.conf && locale-gen &&\
+    echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
     pacman -Sy --noconfirm wget curl vim libyaml openssh ctags git subversion s3cmd &&\
     cd / &&\
     wget -O ruby-install-0.4.3.tar.gz https://github.com/postmodern/ruby-install/archive/v0.4.3.tar.gz &&\
