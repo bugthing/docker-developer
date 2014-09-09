@@ -3,7 +3,8 @@ FROM base/devel
 
 RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
-    pacman -Syy --noconfirm base-devel wget curl libyaml openssh ctags git subversion s3cmd vim tmux &&\
+    pacman -Syyu &&\
+    pacman -S --noconfirm base-devel wget curl libyaml openssh ctags subversion s3cmd git vim tmux ack jre8-openjdk &&\
     mkdir -p /root/src &&\
     cd /root/src &&\
     echo "%wheel        ALL=NOPASSWD: ALL" >> /etc/sudoers &&\
