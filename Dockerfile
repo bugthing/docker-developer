@@ -4,11 +4,11 @@ FROM base/devel
 RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
     (yes | pacman -Syyu) &&\
-    pacman -S --noconfirm base-devel libyaml \
-      jre8-openjdk nodejs openssh            \
-      subversion git vim tmux                \
-      ctags s3cmd ack wget curl              \
-      firefox xorg-server-xvfb               \
+    pacman -S --noconfirm base-devel libyaml postgresql-libs \
+      jre8-openjdk nodejs openssh \
+      subversion git vim tmux     \
+      ctags s3cmd ack wget curl   \
+      firefox xorg-server-xvfb    \
       &&\
     \
     mkdir -p /root/src &&\
