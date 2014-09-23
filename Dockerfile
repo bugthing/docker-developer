@@ -8,7 +8,7 @@ RUN \
       jre8-openjdk nodejs openssh \
       subversion git vim tmux     \
       ctags s3cmd ack wget curl   \
-      firefox xorg-server-xvfb    \
+      phantomjs firefox xorg-server-xvfb    \
       &&\
     \
     mkdir -p /root/src &&\
