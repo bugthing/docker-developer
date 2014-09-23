@@ -50,6 +50,7 @@ RUN \
 #    \
     cd /
 
+ADD files/sshd_config /etc/ssh/sshd_config
 ADD files/chruby.sh /etc/profile.d/chruby.sh
 ADD files/container_prepare /opt/container_bin/container_prepare
 RUN chmod -R +x /opt/container_bin
