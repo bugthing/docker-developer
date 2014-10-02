@@ -5,9 +5,9 @@ RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
     (yes | pacman -Syyu) &&\
     pacman -S --noconfirm base-devel libyaml postgresql-libs \
-      jre8-openjdk nodejs openssh \
-      subversion git vim tmux     \
-      ctags s3cmd ack wget curl   \
+      openssh subversion git vim tmux \
+      ctags s3cmd ack wget curl \
+      jre8-openjdk nodejs python \
       phantomjs docker firefox xorg-server-xvfb    \
       &&\
     \
