@@ -29,6 +29,7 @@ RUN \
     \
     useradd -m -g users -G wheel -s /bin/bash --home-dir /home/developer developer &&\
     echo 'developer:developer' | chpasswd &&\
+    su - developer -c 'GEMDIR=`ruby -e "print Gem.user_dir"`; echo "PATH=$GEMDIR/bin:$PATH" >> ~/.bashrc' &&\
     \
     ssh-keygen -A &&\
     sed -i -e 's/^UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config &&\

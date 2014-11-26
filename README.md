@@ -16,19 +16,23 @@ containing a configured vim, ruby, nodejs and other typical development type stu
 
 3. start developing..
 
-  3.1 - Install a ruby
+  3.1 - Setup your dot file
+    gem install dotty
+    dotty add dotty https://github.com/bugthing/dotty.git
+
+  3.2 - Setup vim
+    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+    vim +PluginInstall +qall
+
+### Install a ruby
+
+ruby-install and chruby are provided for custom rubys
+
     ruby-install ruby 2.0.0-p481
     source /usr/local/share/chruby/chruby.sh
     chruby ruby-2.0.0-p481
 
-  3.2 - Setup your dot file
-    gem install dotty
-    dotty add dotty https://github.com/bugthing/dotty.git
 
-  3.3 - Setup vim
-    git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-    vim +PluginInstall +qall
-
-## Build
+## Build image
 
     docker build -t bugthing/developer .
