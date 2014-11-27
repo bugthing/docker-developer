@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# Usage:
+#  ./sync.sh <ssh key path> <remote ssh host and dir> <local dir>
+
 SSHKEY=${1:-"$HOME/.ssh/sync_ssh_key"}
 REMOTESYNCDIR=${2:-"sync@my-home-pc.no-ip.org:/raidarray/HomeSync"}
 SYNCDIR=${3:-"$HOME/HomeSync"}
