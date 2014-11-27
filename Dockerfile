@@ -1,19 +1,33 @@
 
+# Start from a basic arch linux image
 FROM base/archlinux
 
+# Setup locale. Install packages. Setup sudo. Generate ssh key. Set root password. Add developer user. Add container_bin dir. Create xinit for developer
 RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
     (yes | pacman -Syyu) &&\
     pacman -S --noconfirm base-devel libyaml postgresql-libs \
+      pkgfile ctags s3cmd ack wget curl supervisor cronie \
       openssh subversion git vim tmux \
-      pkgfile ctags s3cmd ack wget curl \
       jre8-openjdk nodejs python perl sqlite \
-      phantomjs docker firefox xorg-server-xvfb x11vnc xorg-xinit xorg-server xterm  \
+      xorg-server xorg-server-xvfb openbox x11vnc xterm phantomjs docker firefox \
       &&\
     \
+    ssh-keygen -A &&\
+    echo 'root:root' | chpasswd &&\
+    echo "%wheel        ALL=NOPASSWD: ALL" >> /etc/sudoers &&\
+    \
+    useradd -m -g users -G wheel -s /bin/bash --home-dir /home/developer developer &&\
+    echo 'developer:developer' | chpasswd &&\
+    su - developer -c 'GEMDIR=`ruby -e "print Gem.user_dir"`; echo "PATH=$GEMDIR/bin:$PATH" >> ~/.bashrc' &&\
+    \
+    mkdir /opt/container_bin
+
+
+# From github - Install ruby-install. Install chruby.
+RUN \
     mkdir -p /root/src &&\
     cd /root/src &&\
-    echo "%wheel        ALL=NOPASSWD: ALL" >> /etc/sudoers &&\
     wget -O ruby-install-0.5.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.5.0.tar.gz &&\
     tar -xzvf ruby-install-0.5.0.tar.gz &&\
     cd ruby-install-0.5.0/ &&\
@@ -25,24 +39,9 @@ RUN \
     cd chruby-0.3.9/ &&\
     make install &&\
     \
-    mkdir /opt/container_bin &&\
-    \
-    useradd -m -g users -G wheel -s /bin/bash --home-dir /home/developer developer &&\
-    echo 'developer:developer' | chpasswd &&\
-    su - developer -c 'GEMDIR=`ruby -e "print Gem.user_dir"`; echo "PATH=$GEMDIR/bin:$PATH" >> ~/.bashrc' &&\
-    \
-    ssh-keygen -A &&\
-    sed -i -e 's/^UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config &&\
-    echo 'root:root' | chpasswd &&\
-    \
-    cp /etc/skel/.xinitrc /home/developer/.xinitrc &&\
-    echo "exec xterm" >> /home/developer/.xinitrc &&\
-    chown developer:users /home/developer/.xinitrc &&\
     cd /
 
-ADD files/sshd_config /etc/ssh/sshd_config
-ADD files/chruby.sh /etc/profile.d/chruby.sh
-
+# From AUR - Install pacaur
 RUN \
     cd /root/src &&\
     wget -O cower.tar.gz https://aur.archlinux.org/packages/co/cower/cower.tar.gz &&\
@@ -60,11 +59,22 @@ RUN \
     \
     cd /
 
+# Add some configs, set the container_prepare script
+ADD files/sshd_config /etc/ssh/sshd_config
+ADD files/chruby.sh /etc/profile.d/chruby.sh
 ADD files/container_prepare /opt/container_bin/container_prepare
 RUN chmod -R +x /opt/container_bin
 ENV PATH /opt/container_bin/:$PATH
 
+# Add service configs
+ADD files/cron-supervisor.ini /etc/supervisor.d/cron.ini
+ADD files/ssh-supervisor.ini /etc/supervisor.d/ssh.ini
+ADD files/xvfb-supervisor.ini /etc/supervisor.d/xvfb.ini
+ADD files/x11vnc-supervisor.ini /etc/supervisor.d/x11vnc.ini
+ADD files/openbox-supervisor.ini /etc/supervisor.d/openbox.ini
+
+# Expose port for ssh, web, vnc and some spares
 EXPOSE 22 80 443 5900 8080 8081 8082 8083 8084 8085 8086 8087 8088 8089
 
-CMD container_prepare &&\
-    /usr/bin/sshd -D
+# Run the prepare script and fire up supervisord
+CMD container_prepare && /usr/bin/supervisord -n -c /etc/supervisord.conf

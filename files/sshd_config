@@ -1,6 +1,5 @@
 AuthorizedKeysFile  .ssh/authorized_keys
 ChallengeResponseAuthentication no
-UsePAM no
 X11Forwarding yes
 PermitRootLogin no
 UsePrivilegeSeparation sandbox

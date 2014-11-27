@@ -1,7 +1,7 @@
 docker-developer
 ================
 
-Docker container to use for web development. It should be a nice portable enviroment
+Docker container to use for web development. Intended to be a portable dev enviroment
 containing a configured vim, ruby, nodejs and other typical development type stuff.
 
 ## Usage
@@ -35,4 +35,28 @@ ruby-install and chruby are provided for custom rubys
 
 ## Build image
 
-    docker build -t bugthing/developer .
+    docker build -t bugthing/docker-developer .
+
+## Services
+
+The container uses supervisor to start a number of services with in the container
+
+### Cron
+
+Scheduled tasks
+
+### SSH
+
+SSH access to the container
+
+### VNC
+
+There is an x11vnc server available for use, just ensure you start the container with the correct
+port exposed. Add the following switch
+
+    -p 9590:5900
+
+Then you can connect via VNC to:
+
+    vnc rdp://0.0.0.0:9590
+
