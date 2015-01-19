@@ -5,6 +5,7 @@ FROM base/archlinux
 # Setup locale. Install packages. Setup sudo. Generate ssh key. Set root password. Add developer user. Add container_bin dir. Create xinit for developer
 RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
+    pacman-db-upgrade &&\
     (yes | pacman -Syyu) &&\
     pacman -S --noconfirm base-devel libyaml postgresql-libs libmariadbclient \
       pkgfile ctags s3cmd ack wget curl ack supervisor cronie rsync \
