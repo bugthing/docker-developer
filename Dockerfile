@@ -5,6 +5,9 @@ FROM base/archlinux
 # Setup locale. Install packages. Setup sudo. Generate ssh key. Set root password. Add developer user. Add container_bin dir. Create xinit for developer
 RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
+    cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup &&\
+    sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup &&\
+    rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist &&\
     pacman-key --refresh-keys &&\
     pacman-db-upgrade &&\
     (yes | pacman -Syyu) &&\
