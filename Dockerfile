@@ -6,6 +6,7 @@ FROM base/archlinux
 RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
     pacman-key --refresh-keys &&\
+    pacman-db-upgrade &&\
     (yes | pacman -Syyu) &&\
     pacman -S --noconfirm base-devel libyaml postgresql-libs libmariadbclient \
       pkgfile ctags s3cmd ack wget curl ack supervisor cronie rsync \
