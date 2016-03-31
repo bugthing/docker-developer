@@ -8,7 +8,10 @@ RUN \
     cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup &&\
     sed -i 's/^#Server/Server/' /etc/pacman.d/mirrorlist.backup &&\
     rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist &&\
+    pacman --noconfirm -Sy archlinux-keyring &&\
+    pacman-key --populate &&\
     pacman-key --refresh-keys &&\
+    pacman --noconfirm -Syyuu &&\
     pacman-db-upgrade &&\
     (yes | pacman -Syyu) &&\
     pacman -S --noconfirm base-devel libyaml postgresql-libs libmariadbclient \
