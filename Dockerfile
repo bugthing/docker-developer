@@ -56,14 +56,14 @@ RUN \
     wget -O cower.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz &&\
     tar xzf cower.tar.gz &&\
     cd cower &&\
-    makepkg --noconfirm -s &&\
+    makepkg --noconfirm --skippgpcheck -s &&\
     sudo pacman -U --noconfirm cower-*.pkg.tar.xz &&\
     \
     cd /root/src &&\
     wget -O pacaur.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz &&\
     tar xzf pacaur.tar.gz &&\
     cd pacaur &&\
-    makepkg --noconfirm -s &&\
+    makepkg --noconfirm --skippgpcheck -s &&\
     sudo pacman -U --noconfirm pacaur-*.pkg.tar.xz &&\
     \
     cd /
