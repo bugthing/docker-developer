@@ -31,7 +31,6 @@ RUN \
     \
     mkdir /opt/container_bin
 
-
 # From github - Install ruby-install. Install chruby.
 RUN \
     mkdir -p /root/src &&\
@@ -50,22 +49,25 @@ RUN \
     cd /
 
 # From AUR - Install pacaur
+USER developer
 RUN \
-    cd /root/src &&\
+    mkdir -p /home/developer/src &&\
+    cd /home/developer/src &&\
     wget -O cower.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/cower.tar.gz &&\
     tar xzf cower.tar.gz &&\
     cd cower &&\
     makepkg --noconfirm -s &&\
-    pacman -U --noconfirm cower-*.pkg.tar.xz &&\
+    sudo pacman -U --noconfirm cower-*.pkg.tar.xz &&\
     \
     cd /root/src &&\
     wget -O pacaur.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz &&\
     tar xzf pacaur.tar.gz &&\
     cd pacaur &&\
     makepkg --noconfirm -s &&\
-    pacman -U --noconfirm pacaur-*.pkg.tar.xz &&\
+    sudo pacman -U --noconfirm pacaur-*.pkg.tar.xz &&\
     \
     cd /
+USER root
 
 # Add some configs, set the container_prepare script
 ADD files/sshd_config /etc/ssh/sshd_config
