@@ -59,7 +59,7 @@ RUN \
     makepkg --noconfirm --skippgpcheck -s &&\
     sudo pacman -U --noconfirm cower-*.pkg.tar.xz &&\
     \
-    cd /root/src &&\
+    cd /home/developer/src &&\
     wget -O pacaur.tar.gz https://aur.archlinux.org/cgit/aur.git/snapshot/pacaur.tar.gz &&\
     tar xzf pacaur.tar.gz &&\
     cd pacaur &&\
