@@ -1,8 +1,6 @@
+FROM bugthing/docker-archlinux
 
-# Start from a basic arch linux image
-FROM base/archlinux
-
-# Setup locale. Install packages. Setup sudo. Generate ssh key. Set root password. Add developer user. Add container_bin dir. Create xinit for developer
+# Setup locale. Install packages. Setup sudo. Generate ssh key. Set root password. Add developer user. Add container_bin dir.
 RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
     cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup &&\
@@ -27,26 +25,34 @@ RUN \
     \
     useradd -m -g users -G wheel -s /bin/bash --home-dir /home/developer developer &&\
     echo 'developer:developer' | chpasswd &&\
-    su - developer -c 'GEMDIR=`ruby -e "print Gem.user_dir"`; echo "PATH=$GEMDIR/bin:$PATH" >> ~/.bashrc' &&\
-    \
     mkdir /opt/container_bin
 
-# From github - Install ruby-install. Install chruby.
-RUN \
-    mkdir -p /root/src &&\
-    cd /root/src &&\
-    wget -O ruby-install-0.5.0.tar.gz https://github.com/postmodern/ruby-install/archive/v0.5.0.tar.gz &&\
-    tar -xzvf ruby-install-0.5.0.tar.gz &&\
-    cd ruby-install-0.5.0/ &&\
+# chruby
+ENV CHRUBY_VERSION 0.3.9
+RUN wget -O chruby-$CHRUBY_VERSION.tar.gz https://github.com/postmodern/chruby/archive/v$CHRUBY_VERSION.tar.gz && tar -xzvf chruby-$CHRUBY_VERSION.tar.gz
+RUN cd chruby-$CHRUBY_VERSION/ &&\
     make install &&\
-    \
-    cd /root/src &&\
-    wget -O chruby-0.3.9.tar.gz https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz &&\
-    tar -xzvf chruby-0.3.9.tar.gz &&\
-    cd chruby-0.3.9/ &&\
+    cd / &&\
+    echo '[ -n "$BASH_VERSION" ] || [ -n "$ZSH_VERSION" ] || return' >> /etc/profile.d/chruby.sh &&\
+    echo 'source /usr/local/share/chruby/chruby.sh' >> /etc/profile.d/chruby.sh &&\
+    chmod +x /etc/profile.d/chruby.sh
+
+# ruby-install (ruby installer)
+ENV RUBYINSTALL_VERSION 0.6.1
+RUN wget -O ruby-install-$RUBYINSTALL_VERSION.tar.gz https://github.com/postmodern/ruby-install/archive/v$RUBYINSTALL_VERSION.tar.gz &&\
+    tar -xzvf ruby-install-$RUBYINSTALL_VERSION.tar.gz &&\
+    cd ruby-install-$RUBYINSTALL_VERSION/ &&\
     make install &&\
-    \
     cd /
+
+# nvm (nodejs installer)
+ENV NVM_VERSION 0.32.1
+ENV NVM_DIR /usr/local/nvm
+RUN wget -O nvm-$NVM_VERSION.tar.gz https://github.com/creationix/nvm/archive/v$NVM_VERSION.tar.gz &&\
+    tar -xzvf nvm-$NVM_VERSION.tar.gz &&\
+    cp -a ./nvm-$NVM_VERSION /opt/nvm &&\
+    mkdir -m 777 /usr/local/nvm &&\
+    mkdir -m 777 /usr/local/node
 
 # From AUR - Install pacaur
 USER developer
