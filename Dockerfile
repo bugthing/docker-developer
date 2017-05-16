@@ -1,6 +1,6 @@
 FROM bugthing/docker-archlinux
 
-# Setup locale. Install packages. Setup sudo. Generate ssh key. Set root password. Add developer user. Add container_bin dir.
+# Setup locale. Install packages. Setup sudo. Generate ssh key. Set root password. Add developer user.
 RUN \
     echo 'en_GB.UTF-8 UTF-8' > /etc/locale.gen && echo 'LANG="en_GB.UTF-8"' > /etc/locale.conf && locale-gen &&\
     cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup &&\
@@ -25,8 +25,7 @@ RUN \
     echo "%wheel        ALL=NOPASSWD: ALL" >> /etc/sudoers &&\
     \
     useradd -m -g users -G wheel -s /bin/bash --home-dir /home/developer developer &&\
-    echo 'developer:developer' | chpasswd &&\
-    mkdir /opt/container_bin
+    echo 'developer:developer' | chpasswd
 
 # chruby
 ENV CHRUBY_VERSION 0.3.9
@@ -55,8 +54,24 @@ RUN wget -O nvm-$NVM_VERSION.tar.gz https://github.com/creationix/nvm/archive/v$
     mkdir -m 777 /usr/local/nvm &&\
     mkdir -m 777 /usr/local/node
 
-# From AUR - Install pacaur
+# Add some configs, set the container_prepare script
+ADD files/sshd_config /etc/ssh/sshd_config
+ADD files/chruby.sh /etc/profile.d/chruby.sh
+
+# Add service configs
+ADD files/cron-supervisor.ini /etc/supervisor.d/cron.ini
+ADD files/ssh-supervisor.ini /etc/supervisor.d/ssh.ini
+ADD files/xvfb-supervisor.ini /etc/supervisor.d/xvfb.ini
+ADD files/x11vnc-supervisor.ini /etc/supervisor.d/x11vnc.ini
+ADD files/openbox-supervisor.ini /etc/supervisor.d/openbox.ini
+
+# Expose port for ssh, web, vnc and some spares
+EXPOSE 22 80 443 5900 8080 8081 8082 8083 8084 8085 8086 8087 8088 8089
+
+# Become developer user from here
 USER developer
+
+# From AUR - Install pacaur
 RUN \
     mkdir -p /home/developer/src &&\
     cd /home/developer/src &&\
@@ -74,24 +89,6 @@ RUN \
     sudo pacman -U --noconfirm pacaur-*.pkg.tar.xz &&\
     \
     cd /
-USER root
-
-# Add some configs, set the container_prepare script
-ADD files/sshd_config /etc/ssh/sshd_config
-ADD files/chruby.sh /etc/profile.d/chruby.sh
-ADD files/container_prepare /opt/container_bin/container_prepare
-RUN chmod -R +x /opt/container_bin
-ENV PATH /opt/container_bin/:$PATH
-
-# Add service configs
-ADD files/cron-supervisor.ini /etc/supervisor.d/cron.ini
-ADD files/ssh-supervisor.ini /etc/supervisor.d/ssh.ini
-ADD files/xvfb-supervisor.ini /etc/supervisor.d/xvfb.ini
-ADD files/x11vnc-supervisor.ini /etc/supervisor.d/x11vnc.ini
-ADD files/openbox-supervisor.ini /etc/supervisor.d/openbox.ini
-
-# Expose port for ssh, web, vnc and some spares
-EXPOSE 22 80 443 5900 8080 8081 8082 8083 8084 8085 8086 8087 8088 8089
 
 # Run the prepare script and fire up supervisord
-CMD container_prepare && /usr/bin/supervisord -n -c /etc/supervisord.conf
+CMD sudo /usr/bin/supervisord -n -c /etc/supervisord.conf

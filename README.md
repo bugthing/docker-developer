@@ -2,47 +2,41 @@ docker-developer
 ================
 
 Docker container to use for web development. Intended to be a portable dev enviroment
-containing a configured vim, ruby, nodejs and other typical development type stuff.
+containing vim, tmux and other typical development type stuff.
 
-## Usage
+## My Usage
 
 1. Fire up the container
 
-    docker run -d -t -p 9920:22 -v /local/storage:/home/developer bugthing/docker-developer
+    docker run -d --name developer --restart always --net host -e DOCKER_HOST=0.0.0.0:4243 -v /container-volumes/developer-home:/home/developer bugthing/docker-developer
 
-2. connect in via ssh
+2. Configure my desktop machine to start a container and execute docker command to get inside the container
 
-    ssh -A -p 9920 developer@localhost  # password is 'developer'
+    docker exec -it developer bash
 
-3. start developing..
+## First time
 
-  1. Setup your dot file
+1. Install a ruby version
 
-```
-    GEMDIR=`ruby -e "print Gem.user_dir"` export PATH="${GEMDIR}/bin:${PATH}"
+    ruby-install ruby 2.3.4
+
+    PKG_CONFIG_PATH=/usr/lib/openssl-1.0/pkgconfig ruby-install ruby 2.3.4
+
+2. Install a NodeJS version
+
+    nvm install 6.10.0
+
+3. Grab my dotfiles
+
     gem install dotty
-    dotty add dotty https://github.com/bugthing/dotty.git
-```
+    dotty add default https://github.com/bugthing/dotty.git
 
-  2. Setup vim
+4. Setup vim
 
 ```
     git clone https://github.com/gmarik/Vundle.vim.git ~/.vim/bundle/Vundle.vim
     vim +PluginInstall +qall
 ```
-
-### Install a ruby
-
-ruby-install and chruby are provided for custom rubys
-
-    ruby-install ruby 2.0.0-p481
-    source /usr/local/share/chruby/chruby.sh
-    chruby ruby-2.0.0-p481
-
-
-## Build image
-
-    docker build -t bugthing/docker-developer .
 
 ## Services
 
