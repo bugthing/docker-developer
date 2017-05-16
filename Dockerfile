@@ -15,7 +15,7 @@ RUN \
     pacman -S --noconfirm base-devel libyaml postgresql-libs libmariadbclient \
       pkgfile ctags s3cmd ack wget curl ack supervisor cronie rsync aspell \
       openssh subversion git vim tmux ripgrep \
-      jre8-openjdk sqlite python perl \
+      jre8-openjdk sqlite python perl gconf imagemagick \
       xorg-server xorg-server-xvfb openbox x11vnc xterm phantomjs \
       docker syncthing firefox chromium pass \
       &&\
@@ -55,7 +55,6 @@ RUN wget -O nvm-$NVM_VERSION.tar.gz https://github.com/creationix/nvm/archive/v$
 
 # Add some configs
 ADD files/sshd_config /etc/ssh/sshd_config
-ENV AUTO_START_SSH true
 
 # Add service configs
 ADD files/cron-supervisor.ini /etc/supervisor.d/cron.ini
