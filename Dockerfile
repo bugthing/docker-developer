@@ -69,6 +69,7 @@ EXPOSE 22 80 443 5900 8080 8081 8082 8083 8084 8085 8086 8087 8088 8089
 
 # Become developer user from here
 USER developer
+WORKDIR /home/developer
 
 # From AUR - Install pacaur
 RUN \
