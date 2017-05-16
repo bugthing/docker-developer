@@ -90,5 +90,8 @@ RUN \
     \
     cd /
 
+# set bash to be the entry point
+ENTRYPOINT ["/bin/bash"]
+
 # Run the prepare script and fire up supervisord
 CMD sudo /usr/bin/supervisord -n -c /etc/supervisord.conf
