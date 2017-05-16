@@ -13,10 +13,11 @@ RUN \
     pacman-db-upgrade &&\
     (yes | pacman -Syyu) &&\
     pacman -S --noconfirm base-devel libyaml postgresql-libs libmariadbclient \
-      pkgfile ctags s3cmd ack wget curl ack supervisor cronie rsync \
+      pkgfile ctags s3cmd ack wget curl ack supervisor cronie rsync aspell \
       openssh subversion git vim tmux \
-      jre8-openjdk nodejs python perl sqlite \
-      xorg-server xorg-server-xvfb openbox x11vnc xterm phantomjs docker firefox \
+      jre8-openjdk sqlite python perl \
+      xorg-server xorg-server-xvfb openbox x11vnc xterm phantomjs \
+      docker syncthing firefox chromium \
       &&\
     \
     ssh-keygen -A &&\
@@ -45,7 +46,7 @@ RUN wget -O ruby-install-$RUBYINSTALL_VERSION.tar.gz https://github.com/postmode
     make install &&\
     cd /
 
-# nvm (nodejs installer)
+# nvm (nodejs installer and switcher)
 ENV NVM_VERSION 0.32.1
 ENV NVM_DIR /usr/local/nvm
 RUN wget -O nvm-$NVM_VERSION.tar.gz https://github.com/creationix/nvm/archive/v$NVM_VERSION.tar.gz &&\
