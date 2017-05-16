@@ -17,7 +17,7 @@ RUN \
       openssh subversion git vim tmux \
       jre8-openjdk sqlite python perl \
       xorg-server xorg-server-xvfb openbox x11vnc xterm phantomjs \
-      docker syncthing firefox chromium \
+      docker syncthing firefox chromium pass \
       &&\
     \
     ssh-keygen -A &&\
