@@ -41,21 +41,21 @@ RUN cd chruby-$CHRUBY_VERSION/ &&\
 ENV RUBYINSTALL_VERSION 0.6.1
 RUN wget -O ruby-install-$RUBYINSTALL_VERSION.tar.gz https://github.com/postmodern/ruby-install/archive/v$RUBYINSTALL_VERSION.tar.gz &&\
     tar -xzvf ruby-install-$RUBYINSTALL_VERSION.tar.gz &&\
+    rm ruby-install-$RUBYINSTALL_VERSION.tar.gz &&\
     cd ruby-install-$RUBYINSTALL_VERSION/ &&\
     make install &&\
     cd /
 
 # nvm (nodejs installer and switcher)
 ENV NVM_VERSION 0.32.1
-ENV NVM_DIR /usr/local/nvm
 RUN wget -O nvm-$NVM_VERSION.tar.gz https://github.com/creationix/nvm/archive/v$NVM_VERSION.tar.gz &&\
     tar -xzvf nvm-$NVM_VERSION.tar.gz &&\
-    cp -a ./nvm-$NVM_VERSION /opt/nvm &&\
-    mkdir -m 777 /usr/local/nvm &&\
-    mkdir -m 777 /usr/local/node
+    rm nvm-$NVM_VERSION.tar.gz &&\
+    cp -a ./nvm-$NVM_VERSION /opt/nvm
 
-# Add some configs, set the container_prepare script
+# Add some configs
 ADD files/sshd_config /etc/ssh/sshd_config
+ENV AUTO_START_SSH true
 
 # Add service configs
 ADD files/cron-supervisor.ini /etc/supervisor.d/cron.ini

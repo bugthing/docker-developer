@@ -14,7 +14,13 @@ containing vim, tmux and other typical development type stuff.
 
     docker exec -it developer bash
 
-## First time
+## First time usage
+
+0. Configure your shell
+
+    /opt/nvm/install.sh
+    source ~/.nvm/nvm.sh
+    source /usr/local/share/chruby/chruby.sh
 
 1. Install a ruby version
 
