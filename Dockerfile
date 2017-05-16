@@ -56,7 +56,6 @@ RUN wget -O nvm-$NVM_VERSION.tar.gz https://github.com/creationix/nvm/archive/v$
 
 # Add some configs, set the container_prepare script
 ADD files/sshd_config /etc/ssh/sshd_config
-ADD files/chruby.sh /etc/profile.d/chruby.sh
 
 # Add service configs
 ADD files/cron-supervisor.ini /etc/supervisor.d/cron.ini
@@ -89,9 +88,6 @@ RUN \
     sudo pacman -U --noconfirm pacaur-*.pkg.tar.xz &&\
     \
     cd /
-
-# set bash to be the entry point
-ENTRYPOINT ["/bin/bash"]
 
 # Run the prepare script and fire up supervisord
 CMD sudo /usr/bin/supervisord -n -c /etc/supervisord.conf
