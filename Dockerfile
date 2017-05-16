@@ -14,7 +14,7 @@ RUN \
     (yes | pacman -Syyu) &&\
     pacman -S --noconfirm base-devel libyaml postgresql-libs libmariadbclient \
       pkgfile ctags s3cmd ack wget curl ack supervisor cronie rsync aspell \
-      openssh subversion git vim tmux \
+      openssh subversion git vim tmux ripgrep \
       jre8-openjdk sqlite python perl \
       xorg-server xorg-server-xvfb openbox x11vnc xterm phantomjs \
       docker syncthing firefox chromium pass \
